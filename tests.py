@@ -3,6 +3,15 @@ from token import EQUAL
 import pytest
 from model import Question
 
+@pytest.fixture
+def create_question():
+    question = Question("Question with 4 multiple choices", 5)
+    c1 = question.add_choice("A", True)
+    c2 = question.add_choice("B")
+    c3 = question.add_choice("C")
+    c4 = question.add_choice("D")
+    return question
+
 
 def test_create_question():
     question = Question(title='q1')
@@ -115,6 +124,26 @@ def test_set_correct_choices_with_invalid_id_exception():
     wrong_id = [c1.id *3]
     with pytest.raises(Exception):
         q.set_correct_choices(wrong_id)
+
+#Tests using fixture
+def test_remove_all_choices_from_fixture(create_question):
+    question = create_question
+    assert len(question.choices) == 4
+    question.remove_all_choices()
+    assert question.choices == []
+
+def test_choices_have_unique_ids(create_question):
+    question = create_question
+    ids = [choice.id for choice in question.choices]
+    assert len(ids) == len(set(ids))
+
+
+
+
+
+
+
+
 
 
 
